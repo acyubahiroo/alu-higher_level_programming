@@ -1,0 +1,121 @@
+The ``7-base_geometry`` module
+===============================
+
+Check instantiation
+---------------------
+
+First we import BaseGeometry and instantiate it:
+
+    >>> BaseGeometry = __import__('7-base_geometry').BaseGeometry
+    >>> bg = BaseGeometry()
+    >>> type(bg)
+    <class '7-base_geometry.BaseGeometry'>
+
+Using ``area()``
+------------------
+
+``area()`` is not implemented in ``BaseGeometry`` and must raise an
+``Exception``:
+
+    >>> bg.area()
+    Traceback (most recent call last):
+    Exception: area() is not implemented
+
+    >>> try:
+    ...     bg.area()
+    ... except Exception as e:
+    ...     print("[{}] {}".format(e.__class__.__name__, e))
+    [Exception] area() is not implemented
+
+Using ``integer_validator()``
+-------------------------------
+
+Valid values return ``None`` and raise nothing:
+
+    >>> bg.integer_validator("my_int", 12)
+    >>> bg.integer_validator("width", 89)
+
+A non-integer value raises a ``TypeError``:
+
+    >>> bg.integer_validator("name", "John")
+    Traceback (most recent call last):
+    TypeError: name must be an integer
+
+Calling ``integer_validator()`` with no arguments at all raises a
+``TypeError`` for the missing required arguments (the exact wording
+of this particular error comes from Python itself and can vary
+slightly between versions, so only the exception type is checked):
+
+    >>> bg.integer_validator() #doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    TypeError: integer_validator() missing 2 required positional arguments: 'name' and 'value'
+
+Using ``integer_validator("age")``
+-------------------------------------
+
+Calling ``integer_validator("age")`` with only the ``name`` argument
+and no ``value`` also raises a ``TypeError``:
+
+    >>> bg.integer_validator("age") #doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    TypeError: integer_validator() missing 1 required positional argument: 'value'
+
+Testing ``integer_validator("age", 1)`` - a valid positive integer,
+raises nothing:
+
+    >>> bg.integer_validator("age", 1)
+
+Testing ``integer_validator("age", 0)`` - zero is not greater than 0:
+
+    >>> bg.integer_validator("age", 0)
+    Traceback (most recent call last):
+    ValueError: age must be greater than 0
+
+Testing ``integer_validator("age", -4)`` - a negative value:
+
+    >>> bg.integer_validator("age", -4)
+    Traceback (most recent call last):
+    ValueError: age must be greater than 0
+
+Testing ``integer_validator("age", "4")`` - a string, not an integer:
+
+    >>> bg.integer_validator("age", "4")
+    Traceback (most recent call last):
+    TypeError: age must be an integer
+
+Testing ``integer_validator("age", (4,))`` - a tuple:
+
+    >>> bg.integer_validator("age", (4,))
+    Traceback (most recent call last):
+    TypeError: age must be an integer
+
+Testing ``integer_validator("age", [3])`` - a list:
+
+    >>> bg.integer_validator("age", [3])
+    Traceback (most recent call last):
+    TypeError: age must be an integer
+
+Testing ``integer_validator("age", True)`` - ``bool`` is not exactly
+``int``:
+
+    >>> bg.integer_validator("age", True)
+    Traceback (most recent call last):
+    TypeError: age must be an integer
+
+Testing ``integer_validator("age", {3, 4})`` - a set:
+
+    >>> bg.integer_validator("age", {3, 4})
+    Traceback (most recent call last):
+    TypeError: age must be an integer
+
+Testing ``integer_validator("age", None)`` - ``None``:
+
+    >>> bg.integer_validator("age", None)
+    Traceback (most recent call last):
+    TypeError: age must be an integer
+
+Another negative value example with a different name:
+
+    >>> bg.integer_validator("distance", -4)
+    Traceback (most recent call last):
+    ValueError: distance must be greater than 0
